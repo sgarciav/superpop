@@ -8,6 +8,7 @@
 /[Bb]uild/
 /[Bb]uilds/
 /[Ll]ogs/
+/[Ll]og/
 /[Uu]ser[Ss]ettings/
 
 # MemoryCaptures can get excessive in size.
@@ -70,3 +71,20 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# --- Project-specific ---
+
+# OS junk
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# Native runtime dependencies at the project root (CUDA/cuDNN/TensorRT/ONNX/DirectML).
+# Platform-specific prebuilt binaries + model weights: not source, not needed to
+# compile, huge (~2.5 GB), and re-downloadable. Anchored to root so that
+# Assets/**/Plugins/*.dll native plugins stay tracked.
+/*.dll
+/*.onnx
+
+# Runtime-generated data
+/data.csv
