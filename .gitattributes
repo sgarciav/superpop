@@ -1,3 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+*onnxruntime_providers_cuda.dll filter=lfs diff=lfs merge=lfs -text
 Assets/AzureKinectExamples/SDK/Kinect4AzureSDK/Plugins/onnxruntime_providers_cuda.dll filter=lfs diff=lfs merge=lfs -text
