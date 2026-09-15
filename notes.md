@@ -53,3 +53,56 @@ What we proved
  game.
 
  Want me to build that interactive webcam test scene next?
+
+---
+
+## Interactive webcam test (built)
+
+Added a live, in-editor validation scene in the same PoseValidation project:
+- `Assets/Scripts/WebcamPoseTest.cs` - self-contained MonoBehaviour: builds its own
+  UI at runtime (black bg + square RawImage "see myself" + 17 keypoint dots +
+  skeleton bones + info text). Runs MoveNet every frame.
+- `Assets/Scenes/WebcamPoseTest.unity` - one GameObject with the script + a camera.
+- Added `com.unity.ugui` 2.0.0 to the manifest (UnityEngine.UI wasn't present).
+
+What it validates on the real machine:
+1. int32-NHWC preprocessing from a *live* WebCamTexture frame.
+2. GPU compute backend (with try/catch CPU fallback).
+3. Keypoints line up visually with the webcam.
+
+Design note - alignment invariant: the model input and the displayed image are
+kept in the SAME orientation. The webcam is stretched to a square for both (so the
+model's squished 192x192 input matches the square display), and the same
+mirror/flip flags are applied to both the RawImage (via uvRect) and the sampler.
+So MoveNet's normalized (y,x) output is drawn straight onto the square with no
+extra transform.
+
+How to run: open `PoseValidation/Assets/Scenes/WebcamPoseTest.unity` and press
+Play. Live tweaks: **M** = toggle mirror, **V** = toggle vertical flip. Defaults:
+mirror on, flipV off. If the image is upside-down or mirrored wrong, toggle and
+note the values.
+
+Compile-verified headless (exit 0).
+
+### Linux camera gotcha: Intel IPU6 (v4l2loopback) breaks WebCamTexture
+
+On the dev laptop, Unity's WebCamTexture fails with **"device doesn't support
+mmapped buffers"**. Root cause: the built-in camera is an **Intel IPU6 MIPI
+camera**, not a UVC webcam. It's exposed as:
+- `/dev/video0` = `card='Intel MIPI Camera' driver='v4l2 loopback'` (a v4l2loopback
+  fed by a userspace daemon) - the only node the user can access.
+- `/dev/video1..32` = raw "Intel IPU6 ISYS Capture" nodes (permission-denied).
+
+v4l2loopback devices don't support mmap streaming, but Unity's WebCamTexture forces
+mmap -> hard failure. ffmpeg/GStreamer work because they negotiate read()/USERPTR.
+
+**Fix:** WebcamPoseTest.cs now has two `captureMode`s:
+- `WebCamTexture` - normal path (Windows/macOS, UVC cams).
+- `ExternalFfmpeg` (default in the scene) - spawns `ffmpeg -f v4l2 -i /dev/video0
+  ... -pix_fmt rgb24 -f rawvideo pipe:1`, a background thread reads raw RGB24
+  frames off stdout into a Texture2D, feeding the identical MoveNet pipeline.
+  ffmpeg delivers top-row-first frames, so `flipVertical` defaults ON for this path.
+
+Note: this ffmpeg fallback is a Linux-dev convenience. The game targets Windows
+(CUDA/DirectML/TensorRT/onnxruntime DLLs in repo root), where WebCamTexture works
+natively - so production can use captureMode=WebCamTexture.
