@@ -106,3 +106,34 @@ mmap -> hard failure. ffmpeg/GStreamer work because they negotiate read()/USERPT
 Note: this ffmpeg fallback is a Linux-dev convenience. The game targets Windows
 (CUDA/DirectML/TensorRT/onnxruntime DLLs in repo root), where WebCamTexture works
 natively - so production can use captureMode=WebCamTexture.
+
+## Latest fix
+
+Two ways to run once the USB cam is connected
+
+ - Keep captureMode = ExternalFfmpeg (current default) — most robust on Linux; ffmpeg handles the cam regardless of mmap quirks.
+ - Or switch to captureMode = WebCamTexture in the Inspector — a real UVC cam supports mmap, so Unity's native path should work too. Worth a quick try since it's lower-overhead.
+
+ What to check in the Console after Play
+
+ ```
+   [WebcamPoseTest] candidate /dev/videoN name='<Your USB Cam>' preferred=True
+   [WebcamPoseTest] using capture device: /dev/videoN
+   [WebcamPoseTest] first ffmpeg frame received (921600 bytes), avg brightness ~NNN/255
+ ```
+
+ - If brightness is ~0, the feed is black (cam covered / wrong node) — tell me and I'll adjust.
+ - If you see a normal brightness and yourself on screen, tweak M/V for correct orientation and report the FPS/backend line.
+
+Plan
+
+ 1. Plug in the USB webcam, then re-run that same command. You should see a new line like /dev/video33 : HD Webcam ... readable=yes.
+ 2. Press Play. Auto-detect will prefer that USB node (its name won't contain MIPI/IPU6/ISYS), and you should get a live feed + skeleton.
+ 3. Check the Console for:
+     - [WebcamPoseTest] using capture device: /dev/videoN
+     - first ffmpeg frame received … avg brightness ~NNN/255 (a non-zero brightness = real image).
+
+ If auto somehow still picks the internal cam, just paste me the device-list output and I'll give you the exact node to type into the ffmpegDevice field (replacing auto).
+
+ One note: a UVC USB cam supports mmap, so you can also try flipping captureMode to WebCamTexture in the Inspector — that's the lighter, native path and it's what production (Windows) will
+ use. Either mode should work with real USB hardware.
