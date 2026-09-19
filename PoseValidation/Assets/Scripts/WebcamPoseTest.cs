@@ -77,6 +77,12 @@ public class WebcamPoseTest : MonoBehaviour
     Model model;
     BackendType backend;
 
+    // Pipelined async inference state: never block the main thread on the GPU.
+    Tensor<int> inputTensor;
+    Tensor<float> pendingOutput;
+    bool inferBusy;
+    System.Diagnostics.Stopwatch inferSw = new System.Diagnostics.Stopwatch();
+
     // --- WebCamTexture path ---
     WebCamTexture cam;
 
@@ -312,49 +318,77 @@ public class WebcamPoseTest : MonoBehaviour
         LayoutSquare();
         ApplyDisplayOrientation();
 
-        RefreshSource();
-        if (!sourceReady || worker == null) return;
+        // Keep the video preview smooth regardless of inference cadence.
+        UpdateDisplayTexture();
+        if (worker == null) return;
 
-        Preprocess();
-
-        using (var input = new Tensor<int>(new TensorShape(1, Size, Size, 3), nhwc))
+        // 1) Collect a finished inference without ever blocking (async readback).
+        if (inferBusy && pendingOutput != null && pendingOutput.IsReadbackRequestDone())
         {
-            var sw = System.Diagnostics.Stopwatch.StartNew();
-            worker.Schedule(input);
-            var output = worker.PeekOutput() as Tensor<float>; // [1,1,17,3] = (y,x,score)
-            lastKp = output.DownloadToArray();
-            sw.Stop();
-            double ms = sw.Elapsed.TotalMilliseconds;
+            lastKp = pendingOutput.DownloadToArray();
+            pendingOutput = null;
+            inputTensor?.Dispose();
+            inputTensor = null;
+            inferBusy = false;
+
+            inferSw.Stop();
+            double ms = inferSw.Elapsed.TotalMilliseconds;
             emaMs = inferCount == 0 ? ms : emaMs * 0.9 + ms * 0.1;
             inferCount++;
         }
 
-        DrawOverlay(lastKp);
-        UpdateInfo(lastKp);
+        // 2) Kick off a new inference only when idle and a fresh frame is ready.
+        if (!inferBusy && GrabPixelsForInference())
+        {
+            Preprocess();
+            inputTensor = new Tensor<int>(new TensorShape(1, Size, Size, 3), nhwc);
+            inferSw.Restart();
+            worker.Schedule(inputTensor);
+            pendingOutput = worker.PeekOutput() as Tensor<float>; // [1,1,17,3] = (y,x,score)
+            pendingOutput.ReadbackRequest();                      // start async GPU->CPU copy
+            inferBusy = true;
+        }
+
+        if (lastKp != null)
+        {
+            DrawOverlay(lastKp);
+            UpdateInfo(lastKp);
+        }
     }
 
-    // Pull the newest frame into srcPixels/srcW/srcH.
-    void RefreshSource()
+    // Upload the newest camera frame to the preview texture every frame (cheap,
+    // keeps the video smooth). Does NOT read pixels back to the CPU.
+    void UpdateDisplayTexture()
+    {
+        if (captureMode != CaptureMode.ExternalFfmpeg) return;
+        if (!hasNewFrame) return;
+        lock (frameLock)
+        {
+            extTex.LoadRawTextureData(latestFrame);
+            hasNewFrame = false;
+        }
+        extTex.Apply(false);
+        sourceReady = true;
+    }
+
+    // Pull pixels into srcPixels/srcW/srcH only when we're about to run inference.
+    // GetPixels32() is a costly CPU readback, so we avoid doing it every frame.
+    bool GrabPixelsForInference()
     {
         if (captureMode == CaptureMode.ExternalFfmpeg)
         {
-            if (!hasNewFrame) return;
-            lock (frameLock)
-            {
-                extTex.LoadRawTextureData(latestFrame);
-                hasNewFrame = false;
-            }
-            extTex.Apply(false);
+            if (!sourceReady) return false;
             srcPixels = extTex.GetPixels32();
             srcW = extTex.width; srcH = extTex.height;
-            sourceReady = true;
+            return true;
         }
         else
         {
-            if (cam == null || !cam.didUpdateThisFrame || cam.width <= 16) return;
+            if (cam == null || !cam.didUpdateThisFrame || cam.width <= 16) return false;
             srcPixels = cam.GetPixels32();
             srcW = cam.width; srcH = cam.height;
             sourceReady = true;
+            return true;
         }
     }
 
@@ -535,6 +569,7 @@ public class WebcamPoseTest : MonoBehaviour
     void OnDestroy()
     {
         StopFfmpeg();
+        inputTensor?.Dispose();
         worker?.Dispose();
         if (cam != null && cam.isPlaying) cam.Stop();
     }
