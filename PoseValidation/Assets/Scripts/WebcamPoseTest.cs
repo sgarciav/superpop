@@ -32,7 +32,9 @@ public class WebcamPoseTest : MonoBehaviour
     public CaptureMode captureMode = CaptureMode.ExternalFfmpeg;
 
     [Header("Model")]
-    public string modelPath = "Assets/Models/movenet.onnx";
+    // Lives under a Resources/ folder so Resources.Load("movenet") works in
+    // standalone builds (AssetDatabase is Editor-only).
+    public string modelPath = "Assets/Resources/movenet.onnx";
     const int Size = 192; // MoveNet Lightning input: 192x192x3 int32 NHWC (0..255)
 
     [Header("WebCamTexture options")]
