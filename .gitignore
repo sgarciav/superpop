@@ -88,3 +88,5 @@ Thumbs.db
 
 # Runtime-generated data
 /data.csv
+
+opencv-env
