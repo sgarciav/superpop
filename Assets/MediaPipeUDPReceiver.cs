@@ -87,7 +87,8 @@ public class MediaPipeUDPReceiver : MonoBehaviour
                             float y = System.BitConverter.ToSingle(receiveBytes, offset + 5);
                             float z = System.BitConverter.ToSingle(receiveBytes, offset + 9);
                             
-                            joint.position = new Vector3(x, y, z);
+                            // Flip Y coordinate to match Unity's coordinate system
+                            joint.position = new Vector3(x, -y, z);
                             joints.Add(joint);
                             
                             offset += 13;
