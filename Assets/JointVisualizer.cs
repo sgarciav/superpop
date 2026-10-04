@@ -30,14 +30,64 @@ public class JointVisualizer : MonoBehaviour
 
     private void Start()
     {
-        // Get joint transforms from parent (should be set by receiver)
-        CreateJointVisuals();
+        // Get the receiver to get existing joint transforms
+        MediaPipeUDPReceiver receiver = GetComponent<MediaPipeUDPReceiver>();
+        if (receiver != null)
+        {
+            // Use reflection to get the joint transforms from receiver
+            var field = typeof(MediaPipeUDPReceiver).GetField("jointTransforms", 
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (field != null)
+            {
+                jointTransforms = (Transform[])field.GetValue(receiver);
+            }
+        }
+
+        // If we got the transforms from receiver, use them for visuals
+        if (jointTransforms != null && jointTransforms.Length == 17)
+        {
+            AddVisualsToExistingJoints();
+        }
+        else
+        {
+            // Fallback: create new joints (shouldn't happen)
+            CreateJointVisuals();
+        }
+
         CreateSkeletonLines();
+    }
+
+    private void AddVisualsToExistingJoints()
+    {
+        // Add visual components to existing joint GameObjects
+        for (int i = 0; i < 17; i++)
+        {
+            if (jointTransforms[i] != null)
+            {
+                GameObject joint = jointTransforms[i].gameObject;
+
+                // Add mesh components if not already present
+                if (joint.GetComponent<MeshFilter>() == null)
+                {
+                    MeshFilter meshFilter = joint.AddComponent<MeshFilter>();
+                    meshFilter.mesh = CreateSphereMesh();
+                }
+
+                if (joint.GetComponent<MeshRenderer>() == null)
+                {
+                    MeshRenderer meshRenderer = joint.AddComponent<MeshRenderer>();
+                    meshRenderer.material = jointMaterial != null ? jointMaterial : new Material(Shader.Find("Standard"));
+                    meshRenderer.material.color = Color.green;
+                }
+
+                jointSpheres[i] = joint;
+            }
+        }
     }
 
     private void CreateJointVisuals()
     {
-        // Create joint spheres
+        // Create joint spheres (fallback if receiver didn't set them up)
         for (int i = 0; i < 17; i++)
         {
             GameObject sphere = new GameObject($"Joint_{i}");

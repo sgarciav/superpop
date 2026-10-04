@@ -247,7 +247,7 @@ namespace com.rfilkov.components
             for (int i = 0; i < draggableObjects.Length; i++)
             {
                 draggableObjects[i].GetComponent<Rigidbody>().useGravity = false;
-                draggableObjects[i].GetComponent<Rigidbody>().velocity = Vector3.zero;
+                draggableObjects[i].GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
 
                 draggableObjects[i].transform.position = screenCamera ? screenCamera.transform.TransformPoint(initialObjPos[i]) : initialObjPos[i];
                 draggableObjects[i].transform.rotation = screenCamera ? screenCamera.transform.rotation * initialObjRot[i] : initialObjRot[i];

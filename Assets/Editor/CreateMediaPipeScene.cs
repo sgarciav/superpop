@@ -1,24 +1,25 @@
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class CreateMediaPipeScene
 {
     [MenuItem("Tools/Create MediaPipe UDP Test Scene")]
     public static void CreateScene()
     {
-        // Create new scene
-        Scene scene = SceneManager.NewScene(NewSceneSetup.DefaultGameObjects);
-        scene.name = "TestMediaPipeViaUDP";
+        // Create new scene using editor API
+        Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
-        // Find the main camera
-        Camera mainCam = Camera.main;
-        if (mainCam != null)
-        {
-            mainCam.backgroundColor = Color.black;
-            mainCam.transform.position = new Vector3(0, 0.5f, -1f);
-            mainCam.transform.LookAt(Vector3.zero);
-        }
+        // Create main camera
+        GameObject cameraObj = new GameObject("Main Camera");
+        Camera mainCam = cameraObj.AddComponent<Camera>();
+        cameraObj.tag = "MainCamera";
+        mainCam.backgroundColor = Color.black;
+        cameraObj.transform.position = new Vector3(0, 0.5f, -1f);
+        cameraObj.transform.LookAt(Vector3.zero);
 
         // Create root object for skeleton
         GameObject skeletonRoot = new GameObject("SkeletonRoot");
@@ -71,15 +72,13 @@ public class CreateMediaPipeScene
         canvasRect.offsetMin = Vector2.zero;
         canvasRect.offsetMax = Vector2.zero;
 
-        // Add status text
+        // Add status text using TextMeshPro
         GameObject textObj = new GameObject("StatusText");
         textObj.transform.SetParent(canvasObj.transform);
-        Text statusText = textObj.AddComponent<Text>();
+        TextMeshProUGUI statusText = textObj.AddComponent<TextMeshProUGUI>();
         statusText.text = "Waiting for UDP data on port 5005...\nMake sure mediapipe_udp_streamer.py is running";
-        statusText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        statusText.fontSize = 20;
-        statusText.fontStyle = FontStyle.Bold;
-        statusText.alignment = TextAnchor.UpperLeft;
+        statusText.fontSize = 36;
+        statusText.alignment = TextAlignmentOptions.TopLeft;
         statusText.color = Color.green;
 
         RectTransform textRect = textObj.GetComponent<RectTransform>();
@@ -87,11 +86,15 @@ public class CreateMediaPipeScene
         textRect.offsetMax = new Vector2(-10, -10);
         textRect.sizeDelta = new Vector2(0, 100);
 
+        // Ensure Scenes directory exists
+        System.IO.Directory.CreateDirectory("Assets/Scenes");
+        
         // Save scene
         string scenePath = "Assets/Scenes/TestMediaPipeViaUDP.unity";
-        SceneManager.SaveScene(scene, scenePath);
+        EditorSceneManager.SaveScene(scene, scenePath);
         
-        Debug.Log($"Scene created at {scenePath}");
-        Debug.Log("Make sure to assign joint transforms in the MediaPipeUDPReceiver inspector!");
+        Debug.Log($"✓ Scene created at {scenePath}");
+        Debug.Log($"✓ You can now open the scene: Assets/Scenes/TestMediaPipeViaUDP.unity");
+        Debug.Log("Ready to play! Press Play in the editor.");
     }
 }

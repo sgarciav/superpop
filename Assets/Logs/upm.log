@@ -1,0 +1,155 @@
+[2026-10-01T20:29:19.644Z][INFO] Command-line: /home/sgarciav/Unity/Hub/Editor/6000.6.3f1/Editor/Data/Resources/PackageManager/Server/UnityPackageManager server -s 8893 --ipc-path /tmp/Unity-Upm-8893.sock -l 2 --log-file /home/sgarciav/git-repos/KinectGame_FB/Assets/Logs/upm.log
+[2026-10-01T20:29:19.678Z][INFO] IPC server started (IPC path=/tmp/Unity-Upm-8893.sock).
+[2026-10-01T20:29:19.678Z][INFO] Hint: To connect to this UPM instance, launch Unity with the command-line parameter -upmIpcPath Upm-8893.
+[2026-10-01T20:29:28.773Z][INFO] project:add-dependency <-- Request received
+params: {
+  "packageId": "com.unity.toolchain.linux-x86_64-linux"
+}
+[2026-10-01T20:29:28.801Z][INFO] project:add-dependency <-- Request received
+params: {
+  "packageId": "com.unity.sdk.linux-x86_64"
+}
+[2026-10-01T20:29:28.806Z][INFO] project:add-dependency --> 404 (34 ms)
+[2026-10-01T20:29:28.855Z][INFO] project:add-dependency --> 404 (54 ms)
+[2026-10-01T20:29:29.133Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:29.137Z][INFO] project:list-packages --> 404 (3 ms)
+[2026-10-01T20:29:29.146Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:29.148Z][INFO] project:list-packages --> 404 (2 ms)
+[2026-10-01T20:29:29.381Z][INFO] config:project:get-registries <-- Request received
+params: {}
+[2026-10-01T20:29:29.383Z][INFO] config:project:get-registries --> 404 (3 ms)
+[2026-10-01T20:29:30.156Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:30.158Z][INFO] project:list-packages --> 404 (3 ms)
+[2026-10-01T20:29:30.269Z][INFO] project:update-dependencies <-- Request received
+params: {}
+[2026-10-01T20:29:30.307Z][INFO] project:update-dependencies --> 200 (38 ms)
+[2026-10-01T20:29:30.330Z][INFO] project:resolve-packages <-- Request received
+params: {}
+[2026-10-01T20:29:32.334Z][INFO] project:resolve-packages --> 200 (2004 ms)
+[2026-10-01T20:29:40.387Z][INFO] project:add-dependency <-- Request received
+params: {
+  "packageId": "com.unity.toolchain.linux-x86_64-linux"
+}
+[2026-10-01T20:29:40.398Z][INFO] project:add-dependency <-- Request received
+params: {
+  "packageId": "com.unity.sdk.linux-x86_64"
+}
+[2026-10-01T20:29:40.623Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:40.926Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:40.930Z][INFO] config:project:get-registries <-- Request received
+params: {}
+[2026-10-01T20:29:40.971Z][INFO] config:project:get-registries --> 200 (41 ms)
+[2026-10-01T20:29:40.977Z][INFO] project:list-packages --> 200 (354 ms)
+[2026-10-01T20:29:41.808Z][INFO] project:list-packages --> 200 (882 ms)
+[2026-10-01T20:29:43.858Z][INFO] project:add-dependency --> 200 (3471 ms)
+[2026-10-01T20:29:44.710Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:44.801Z][INFO] project:list-packages --> 200 (91 ms)
+[2026-10-01T20:29:44.884Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:44.990Z][INFO] project:list-packages --> 200 (106 ms)
+[2026-10-01T20:29:45.521Z][INFO] project:add-dependency --> 200 (5123 ms)
+[2026-10-01T20:29:46.880Z][INFO] packages:get-all-packageinfo <-- Request received
+params: {}
+[2026-10-01T20:29:46.890Z][INFO] packages:get-all-packageinfo <-- Request received
+params: {}
+[2026-10-01T20:29:46.962Z][INFO] project:resolve-packages <-- Request received
+params: {}
+[2026-10-01T20:29:47.647Z][INFO] packages:get-all-packageinfo --> 200 (756 ms)
+[2026-10-01T20:29:48.184Z][INFO] project:resolve-packages --> 200 (1222 ms)
+[2026-10-01T20:29:48.264Z][INFO] config:project:get-registries <-- Request received
+params: {}
+[2026-10-01T20:29:48.274Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:48.297Z][INFO] config:project:get-registries --> 200 (33 ms)
+[2026-10-01T20:29:48.379Z][INFO] packages:get-all-packageinfo --> 200 (1499 ms)
+[2026-10-01T20:29:48.419Z][INFO] project:list-packages --> 200 (146 ms)
+[2026-10-01T20:29:51.763Z][INFO] project:add-dependency <-- Request received
+params: {
+  "packageId": "com.unity.toolchain.linux-x86_64-linux"
+}
+[2026-10-01T20:29:51.773Z][INFO] project:add-dependency <-- Request received
+params: {
+  "packageId": "com.unity.sdk.linux-x86_64"
+}
+[2026-10-01T20:29:51.837Z][INFO] project:add-dependency --> 200 (74 ms)
+[2026-10-01T20:29:51.905Z][INFO] project:add-dependency --> 200 (132 ms)
+[2026-10-01T20:29:52.071Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:52.083Z][INFO] packages:get-all-packageinfo <-- Request received
+params: {}
+[2026-10-01T20:29:52.140Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:52.168Z][INFO] project:list-packages --> 200 (98 ms)
+[2026-10-01T20:29:52.199Z][INFO] config:project:get-registries <-- Request received
+params: {}
+[2026-10-01T20:29:52.206Z][INFO] config:project:get-registries --> 200 (7 ms)
+[2026-10-01T20:29:52.214Z][INFO] project:list-packages --> 200 (74 ms)
+[2026-10-01T20:29:52.705Z][INFO] packages:get-all-packageinfo --> 200 (622 ms)
+[2026-10-01T20:29:53.371Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:53.439Z][INFO] project:list-packages --> 200 (68 ms)
+[2026-10-01T20:29:54.707Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.addressables@2.11.2"
+}
+[2026-10-01T20:29:54.719Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.ads.ios-support@1.0.1"
+}
+[2026-10-01T20:29:54.735Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.ide.rider@3.0.40"
+}
+[2026-10-01T20:29:54.742Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.mobile.notifications@2.4.3"
+}
+[2026-10-01T20:29:54.750Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.polyspatial.extensions@3.2.2"
+}
+[2026-10-01T20:29:54.760Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.polyspatial.visionos@3.2.2"
+}
+[2026-10-01T20:29:54.771Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.project-auditor-rules@1.0.3"
+}
+[2026-10-01T20:29:54.781Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.scriptablebuildpipeline@3.0.3"
+}
+[2026-10-01T20:29:54.791Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.services.friends@1.1.1"
+}
+[2026-10-01T20:29:54.803Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.services.moderation@1.0.2"
+}
+[2026-10-01T20:29:54.812Z][INFO] packages:get-packageinfo <-- Request received
+params: {
+  "packageId": "com.unity.xr.visionos@3.2.2"
+}
+[2026-10-01T20:29:54.867Z][INFO] packages:get-packageinfo --> 200 (148 ms)
+[2026-10-01T20:29:54.869Z][INFO] packages:get-packageinfo --> 200 (127 ms)
+[2026-10-01T20:29:54.875Z][INFO] packages:get-packageinfo --> 200 (168 ms)
+[2026-10-01T20:29:54.879Z][INFO] packages:get-packageinfo --> 200 (144 ms)
+[2026-10-01T20:29:54.892Z][INFO] packages:get-packageinfo --> 200 (101 ms)
+[2026-10-01T20:29:54.904Z][INFO] packages:get-packageinfo --> 200 (154 ms)
+[2026-10-01T20:29:54.906Z][INFO] packages:get-packageinfo --> 200 (135 ms)
+[2026-10-01T20:29:54.909Z][INFO] packages:get-packageinfo --> 200 (149 ms)
+[2026-10-01T20:29:54.915Z][INFO] packages:get-packageinfo --> 200 (112 ms)
+[2026-10-01T20:29:54.921Z][INFO] packages:get-packageinfo --> 200 (140 ms)
+[2026-10-01T20:29:54.925Z][INFO] packages:get-packageinfo --> 200 (113 ms)
+[2026-10-01T20:29:54.931Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-10-01T20:29:55.006Z][INFO] project:list-packages --> 200 (75 ms)
+[2026-10-01T20:30:43.137Z][INFO] Received shutdown request (SIGINT), shutting down Unity Package Manager
