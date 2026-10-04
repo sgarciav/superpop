@@ -26,6 +26,12 @@
 
 # Visual Studio cache directory
 .vs/
+.csharp.dbg
+
+# Other IDEs
+.idea/
+.vscode/
+*.code-workspace
 
 # Gradle cache directory
 .gradle/
@@ -90,4 +96,17 @@ Thumbs.db
 /data.csv
 
 opencv-env
-*task
+*.task
+
+# Python virtual environments and cache
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Package managers
+node_modules/
+package-lock.json
+yarn.lock
