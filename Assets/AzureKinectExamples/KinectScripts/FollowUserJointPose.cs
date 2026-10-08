@@ -44,7 +44,7 @@ namespace com.rfilkov.components
         public float smoothFactor = 10f;
 
 
-        private KinectManager kinectManager = null;
+        private JointTrackingManager trackingManager = null;
         private Quaternion initialRotation = Quaternion.identity;
 
         private Vector3 vPosJoint = Vector3.zero;
@@ -53,7 +53,7 @@ namespace com.rfilkov.components
 
         void Start()
         {
-            kinectManager = KinectManager.Instance;
+            trackingManager = JointTrackingManager.Instance;
 
             initialRotation = transform.rotation;
             //initialRotation = mirroredView ? Quaternion.Euler(0f, 180f, 0f) : Quaternion.identity;
@@ -61,28 +61,17 @@ namespace com.rfilkov.components
 
         void Update()
         {
-            if (kinectManager && kinectManager.IsInitialized())
+            if (trackingManager && trackingManager.IsInitialized())
             {
-                if (sensorIndex >= 0 || kinectManager.IsUserDetected(playerIndex))
+                // Note: sensorIndex is not used with JointTrackingManager; designed for single sensor setups
+                if (trackingManager.IsUserDetected(playerIndex))
                 {
-                    ulong userId = sensorIndex < 0 ? kinectManager.GetUserIdByIndex(playerIndex) : (ulong)playerIndex;
+                    ulong userId = trackingManager.GetUserIdByIndex(playerIndex);
 
-                    if (sensorIndex >= 0 || kinectManager.IsJointTracked(userId, followJoint))
+                    if (trackingManager.IsJointTracked(userId, followJoint))
                     {
-                        if (sensorTransform != null)
-                        {
-                            if (sensorIndex < 0)
-                                vPosJoint = kinectManager.GetJointKinectPosition(userId, followJoint, true);
-                            else
-                                vPosJoint = kinectManager.GetSensorJointKinectPosition(sensorIndex, (int)userId, followJoint, true);
-                        }
-                        else
-                        {
-                            if (sensorIndex < 0)
-                                vPosJoint = kinectManager.GetJointPosition(userId, followJoint);
-                            else
-                                vPosJoint = kinectManager.GetSensorJointPosition(sensorIndex, (int)userId, followJoint);
-                        }
+                        // Get joint position from the tracking manager
+                        vPosJoint = trackingManager.GetJointPosition(userId, followJoint);
 
                         if (positionOffset != Vector3.zero)
                         {
@@ -99,10 +88,8 @@ namespace com.rfilkov.components
                             vPosJoint = new Vector3(vPosJoint.x * motionScale.x, vPosJoint.y * motionScale.y, vPosJoint.z * motionScale.z);
                         }
 
-                        if (sensorIndex < 0)
-                            qRotJoint = kinectManager.GetJointOrientation(userId, followJoint, !mirroredView);
-                        else
-                            qRotJoint = kinectManager.GetSensorJointOrientation(sensorIndex, (int)userId, followJoint, !mirroredView);
+                        // Get joint orientation
+                        qRotJoint = trackingManager.GetJointOrientation(userId, followJoint);
 
                         qRotJoint = initialRotation * qRotJoint;
 
