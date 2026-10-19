@@ -260,7 +260,7 @@ public class MediaPipeJointManager : MonoBehaviour, IJointTracker
                             if (CocoToKinectMapping.TryGetValue(cocoIndex, out KinectInterop.JointType kinectJoint))
                             {
                                 // Apply transformations
-                                Vector3 position = new Vector3(x, flipYAxis ? -y : y, z) * positionScale;
+                                Vector3 position = Vector3.Scale(new Vector3(x, flipYAxis ? -y : y, z), positionScale);
 
                                 userJoints[kinectJoint] = new JointSnapshot
                                 {
